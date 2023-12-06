@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js/cannon.js - pointerlock controls</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<style>
+            body { margin: 0; }
+            
+            canvas {width: 100%; height: 100%;}
+
+			@font-face {
+				font-family: hackout;
+				src: url('Hackout.otf');	
+			}
+
+			#blocker {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(15, 0, 37, 0.75);
+			}
+
+			#crosshair {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				text-align: center;
+
+				opacity: 0.5;
+				color: rgb(25, 255, 0);
+				font-size: 35px;
+			}
+
+			#hud {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				
+			}
+
+			#sprint {
+				width:100%;
+				height:100%;
+				opacity: 0.15;
+			}
+
+			#glitch {
+				width:100%;
+				height:100%;
+				opacity: 0;
+			}
+
+			#image {
+				width:100%;
+				height:100%;
+			}
+
+			#instructions {
+				width: 100%;
+				height: 100%;
+
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				text-align: center;
+				font-size: 25px;
+				cursor: pointer;
+				color: rgb(222, 222, 222);
+				font-family: hackout;
+			}
+
+			#gameOver {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				text-align: center;
+				font-size: 65px;
+				cursor: pointer;
+				color: rgb(222, 222, 222);
+				background-color: rgba(15, 0, 37, 0.95);
+				font-family: hackout;
+			}
+
+			#debug {
+				justify-content: center;
+				align-items: center;
+
+				text-align: center;
+				font-size: 14px;
+				cursor: pointer;
+			}
+
+			#ui {
+				position: relative;
+				width:100%;
+				height:100%;
+				margin: 0;
+			}
+
+			#lText {
+				position: absolute;
+
+				text-align: center;
+				font-size:35px;
+				color: rgb(222, 222, 222);
+
+				bottom: 0%;
+				left: 23.7%;
+				width:95px;
+				height:40px;
+
+				transform: rotate(-13.5deg);
+
+				border: 3px solid rgb(223, 216, 7);
+			}
+
+			#rText {
+				position: absolute;
+
+				text-align: center;
+				font-size:35px;
+				color: rgb(222, 222, 222);
+
+				bottom: 0%;
+				right: 23.7%;
+				width:95px;
+				height:40px;
+
+				transform: rotate(13.5deg);
+
+				border: 3px solid rgb(223, 216, 7);
+			}
+
+			#healthText {
+				position: absolute;
+
+				text-align: center;
+				font-size:35px;
+				color: rgb(222, 222, 222);
+
+				bottom: 85%;
+				right: 65%;
+				width:95px;
+				height:40px;
+
+				transform: rotate(0deg);
+
+				border: 3px solid #73AD21;
+			}
+
+			#staminaText {
+				position: absolute;
+
+				text-align: center;
+				font-size:35px;
+				color: rgb(222, 222, 222);
+
+				bottom: 85%;
+				left: 65%;
+				width:95px;
+				height:40px;
+
+				transform: rotate(0deg);
+
+				border: 3px solid rgb(7, 223, 198);
+			}
+
+			#scoreText {
+				position: absolute;
+
+				text-align: center;
+				font-size:45px;
+				color: rgb(222, 222, 222);
+
+				bottom: 85%;
+				left: 40%;
+				width:300px;
+				height:50px;
+
+				transform: rotate(0deg);
+
+				border: 3px solid rgb(253, 174, 3);
+			}
+
+			#highScoreText{
+				position: relative;
+
+				text-align: center;
+				font-size:50px;
+				color: rgb(222, 222, 222);
+
+	
+				width:300px;
+				height:40px;
+				
+			}
+
+			#loader {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(15, 0, 37, 1);
+
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				text-align: center;
+				font-size: 25px;
+				cursor: pointer;
+				color: rgb(222, 222, 222);
+				font-family: hackout;
+			}
+
+		</style>
+	</head>
+	<body>
+		
+		<p id="lText">0</p>
+		<p id="rText">0</p>
+		<p id="healthText">100</p>
+		<p id="staminaText">100</p>
+		<p id="scoreText">0</p>
+		
+		<div id="crosshair">
+			<img id="sprint" src="images/actionLines.gif" alt="Sprint">
+		</div>
+
+		<div id="crosshair">
+			<img id="glitch" src="images/glitch.gif" alt="Sprint">
+		</div>
+
+		<div id="hud">
+			<img id="image" src="images/HawkenHUD2.png" alt="HUD">
+		</div>
+
+		<div id="crosshair">
+			<p>
+				☉
+			</p>
+		</div>
+
+		<div id="blocker">
+			<div id="instructions">
+				<p style="font-size:50px;">
+					Click to Play
+				</p>
+				<p>
+					Move: WASD<br/>
+					Jump: SPACE<br/>
+					Sprint: SHIFT<br/>
+					Look: MOUSE<br/>
+					Shoot: LMB/RMB
+				</p>
+			</div>
+		</div>
+
+		<div id="gameOver">
+			<p>
+				GAME OVER
+			</p>
+			<p id = "highScoreText">
+				0
+			</p>
+			<p style="font-size:35px;">
+				Click To Restart
+			</p>
+		</div>
+
+		<div id="loader">
+			<p style="font-size:50px;">
+				LOADING
+			</p>
+		</div>
+
+        <script type="module" src="main.js"></script>
+	</body>
+</html>

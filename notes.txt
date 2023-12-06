@@ -1,0 +1,39 @@
+bob -
+mech hud: "gris approve"
+
+saman -
+gucci sound
+movement gucci
+Hover
+Double Jump
+
+gris -
+add crouch
+walking soundis a bit noisy
+jump sound sound too light "possible change"
+movement is smooth
+
+sefarim -
+sus
+
+amadeus - 
+sus
+
+skybox:
+bluefreeze
+darkcity
+grimmnight
+
+let loader = new GLTFLoader();
+      loader.load('models/beholder/scene2.gltf', function (gltf)
+      {
+        //gltf.scene.scale.set(.1, .1, .1) 
+        // Set the cube's position to be equal to the camera's position 
+        //gltf.scene.position.set(camera.position.x, camera.position.y, camera.position.z); 
+        let enemyModel = gltf.scene;
+        enemyModel.scale.set(5, 5, 5)
+        scene.add(enemyModel)
+
+        // Attach model to mesh 
+        enemyMesh.add(enemyModel);
+      });
